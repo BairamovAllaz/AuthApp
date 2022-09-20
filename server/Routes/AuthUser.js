@@ -25,19 +25,22 @@ router.post("/register", async (req, res) => {
     if (isUserExist) {
       return res.status(401).send("User already exist");
     } else {
-      insertPersonToDatabase(User.firstName, User.lastName).then(insertedId => {
-        insertAccountToDatabase(insertedId, User.email, User.password).then(
-          accountId => {
-            const token = jwt.sign(
-              {
-                user: accountId,
-              },
-              process.env.SECRET_KEY
-            );
-            res.cookie("token", token, { httpOnly: true }).send();
-          }
-        );
-      });
+      const insertedId = await insertPersonToDatabase(
+        User.firstName,
+        User.lastName
+      );
+      const accountId = await insertAccountToDatabase(
+        insertedId,
+        User.email,
+        User.password
+      );
+      const token = jwt.sign(
+        {
+          user: accountId,
+        },
+        process.env.SECRET_KEY
+      );
+      res.cookie("token", token, { httpOnly: true }).send();
     }
   } catch (err) {
     console.log(err);
@@ -83,21 +86,21 @@ router.post("/login", async (req, res) => {
         res.status(404).send("user email not founded");
       } else {
         const passwordFromRequest = req.body.password;
-        await checkPassword(passwordFromRequest, result.password).then(
-          isCorrect => {
-            if (isCorrect) {
-              const token = jwt.sign(
-                {
-                  user: result.Id,
-                },
-                process.env.SECRET_KEY
-              );
-              res.cookie("token", token, { httpOnly: true }).send();
-            } else {
-              res.status(401).send("Password incorrect!");
-            }
-          }
+        const isPasswordCorrect = await checkPassword(
+          passwordFromRequest,
+          result.password
         );
+        if (isPasswordCorrect) {
+          const token = jwt.sign(
+            {
+              user: result.Id,
+            },
+            process.env.SECRET_KEY
+          );
+          res.cookie("token", token, { httpOnly: true }).send();
+        } else {
+          res.status(401).send("Password incorrect!");
+        }
       }
     })
     .catch(err => {
