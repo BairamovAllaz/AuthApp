@@ -1,12 +1,26 @@
 import React from 'react'
 import { Link, Navigate, useNavigate } from "react-router-dom";
+import axios from 'axios'
+import { useState } from 'react';
 import './AuthStyle/Login.css'
+axios.defaults.withCredentials = true;
 function Login({onLogIn}) {
-  let history = useNavigate();
-  function call() { 
-     onLogIn(true);
-     history.push("/");
-  }
+    const [email, setemail] = useState("");
+    const [password, setpassword] = useState("");
+
+    const LoginTo = (e) => { 
+      e.preventDefault();
+      const user = { 
+        email : email, 
+        password : password
+      };
+      fetch("http://localhost:8100/register/login",{method:'post'},user,{withCredentials:true}).then((result) => {
+          console.log(result);
+      }).catch((err) => {
+          console.log(err);
+      });;
+    }  
+
   return (
     <div class="MainWindow">
       <div class="mainLogin">
@@ -22,6 +36,9 @@ function Login({onLogIn}) {
               placeholder="Email"
               required=""
               className="LoginInput"
+              onChange={e => {
+                setemail(e.target.value);
+              }}
             />
             <input
               type="password"
@@ -29,8 +46,11 @@ function Login({onLogIn}) {
               placeholder="Password"
               required=""
               className="LoginInput"
+              onChange={e => {
+                setpassword(e.target.value);
+              }}
             />
-            <button onClick={call} className="loginButton">
+            <button onClick={LoginTo} className="loginButton">
               Login
             </button>
           </form>

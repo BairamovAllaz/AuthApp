@@ -80,6 +80,8 @@ function insertAccountToDatabase(personId, email, password) {
   });
 }
 router.post("/login", async (req, res) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Credentials", true);
   select(req.body.email)
     .then(async result => {
       if (result === undefined) {
