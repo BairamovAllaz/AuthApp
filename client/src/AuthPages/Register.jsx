@@ -3,7 +3,6 @@ import { Link } from "react-router-dom";
 import "./AuthStyle/Register.css";
 function Register() {
   return (
-    <div>
       <div class="mainRegister">
         <input type="checkbox" id="chk" aria-hidden="true" />
 
@@ -52,10 +51,11 @@ function Register() {
         </div>
 
         <div class="SignUp">
-          <Link className="RegisterLink" to="/Login">Have an account?</Link>
+          <Link className="RegisterLink" to="/Login">
+            Have an account?
+          </Link>
         </div>
       </div>
-    </div>
   );
 }
 

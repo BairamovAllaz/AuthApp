@@ -82,12 +82,12 @@ label {
     transform: translateY(-180px);
     margin-top: 40px;
 }
-
 .RegisterLink { 
     text-align: center;
     display: inline-block;
-    margin-top: 30px;
     text-decoration: none;
     font-size: 17px;
     font-weight: 600;
+    margin-top: 30px;
+    margin-left: 100px;
 }
