@@ -1,0 +1,14 @@
+.d {
+    width: 100%;
+    height: 100%;
+    background-color: white;
+}
+
+.SpanDiv{ 
+    display: inline-block;
+    margin-left: 900px;
+}
+
+.But{ 
+    margin-left: 10px;
+}

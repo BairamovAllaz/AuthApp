@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link, Navigate, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 import axios from 'axios'
 import { useState } from 'react';
 import './AuthStyle/Login.css'
@@ -14,11 +14,12 @@ function Login({onLogIn}) {
         email : email, 
         password : password
       };
-      fetch("http://localhost:8100/register/login",{method:'post'},user,{withCredentials:true}).then((result) => {
-          console.log(result);
-      }).catch((err) => {
-          console.log(err);
-      });;
+      // axios.post("http://localhost:8100/register/login",user,{withCredentials:true}).then((result) => {
+      //     console.log(result);
+      // }).catch((err) => {
+      //     console.log(err);
+      // }); 
+
     }  
 
   return (

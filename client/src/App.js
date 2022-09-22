@@ -9,7 +9,8 @@ import {
   Route,
   Switch,
 } from "react-router-dom";
-import { useEffect, useState } from "react";
+import React from "react";
+import ReactDOM from "react-dom";
 import Home from "./Home";
 import { PrivateRoute } from "./AuthPages/privateRoute";
 

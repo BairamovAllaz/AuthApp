@@ -3,6 +3,7 @@ import { Link } from "react-router-dom";
 import "./AuthStyle/Register.css";
 function Register() {
   return (
+    <div className="mm">
       <div class="mainRegister">
         <input type="checkbox" id="chk" aria-hidden="true" />
 
@@ -56,6 +57,7 @@ function Register() {
           </Link>
         </div>
       </div>
+    </div>
   );
 }
 
