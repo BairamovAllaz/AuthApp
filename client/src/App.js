@@ -10,7 +10,6 @@ import {
   Switch,
 } from "react-router-dom";
 import React from "react";
-import ReactDOM from "react-dom";
 import Home from "./Home";
 import { PrivateRoute } from "./AuthPages/privateRoute";
 
@@ -29,8 +28,8 @@ function App() {
             </PrivateRoute>
           }
         />
-        <Route path="/Login" element={<Login/>} />
-        <Route path="/Register" element={<Register/>} />
+        <Route path="/Login" element={<Login />} />
+        <Route path="/Register" element={<Register />} />
       </Routes>
     </BrowserRouter>
   );

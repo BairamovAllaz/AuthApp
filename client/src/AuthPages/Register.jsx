@@ -1,7 +1,51 @@
-import React from "react";
+import React, { useState } from "react";
 import { Link } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./AuthStyle/Register.css";
 function Register() {
+  const [FirstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [passwordVerify, setPasswordVerify] = useState("");
+
+  const navigate = useNavigate();
+  const SubmitRegister = e => {
+    e.preventDefault();
+    const User = {
+      firstName: FirstName,
+      lastName: lastName,
+      email: email,
+      password: password,
+      passwordverify: passwordVerify,
+    };
+    const loginUrl = "http://localhost:8100/register/register";
+    fetch(loginUrl, {
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(User),
+      method: "POST",
+    })
+      .then(res => {
+        if (res.ok) {
+          navigate("/");
+        } else {
+          console.log(
+            "From server: " +
+              res.text().then(text => {
+                console.log(text);
+                alert(text);
+              })
+          );
+        }
+      })
+      .catch(err => {
+        console.log("There is something: " + err.message);
+      });
+  };
   return (
     <div className="mm">
       <div class="mainRegister">
@@ -18,6 +62,9 @@ function Register() {
               name="FirstName"
               placeholder="FirtsName"
               required=""
+              onChange={e => {
+                setFirstName(e.target.value);
+              }}
             />
             <input
               className="SingUpInput"
@@ -25,6 +72,9 @@ function Register() {
               name="LastName"
               placeholder="LastName"
               required=""
+              onChange={e => {
+                setLastName(e.target.value);
+              }}
             />
             <input
               className="SingUpInput"
@@ -32,6 +82,9 @@ function Register() {
               name="Email"
               placeholder="Email"
               required=""
+              onChange={e => {
+                setEmail(e.target.value);
+              }}
             />
             <input
               className="SingUpInput"
@@ -39,6 +92,9 @@ function Register() {
               name="Password"
               placeholder="Password"
               required=""
+              onChange={e => {
+                setPassword(e.target.value);
+              }}
             />
             <input
               className="SingUpInput"
@@ -46,8 +102,13 @@ function Register() {
               name="PasswordVerify"
               placeholder="PasswordVerify"
               required=""
+              onChange={e => {
+                setPasswordVerify(e.target.value);
+              }}
             />
-            <button className="SignUpButton">Sign up</button>
+            <button onClick={SubmitRegister} className="SignUpButton">
+              Sign up
+            </button>
           </form>
         </div>
 

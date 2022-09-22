@@ -1,26 +1,47 @@
-import React from 'react'
-import { Link } from "react-router-dom";
-import axios from 'axios'
-import { useState } from 'react';
-import './AuthStyle/Login.css'
+import React from "react";
+import { Link, useNavigate } from "react-router-dom";
+import axios from "axios";
+import { useState } from "react";
+import "./AuthStyle/Login.css";
 axios.defaults.withCredentials = true;
-function Login({onLogIn}) {
-    const [email, setemail] = useState("");
-    const [password, setpassword] = useState("");
-
-    const LoginTo = (e) => { 
-      e.preventDefault();
-      const user = { 
-        email : email, 
-        password : password
-      };
-      // axios.post("http://localhost:8100/register/login",user,{withCredentials:true}).then((result) => {
-      //     console.log(result);
-      // }).catch((err) => {
-      //     console.log(err);
-      // }); 
-
-    }  
+function Login() {
+  const navigate = useNavigate();
+  const [email, setemail] = useState("");
+  const [password, setpassword] = useState("");
+  const LoginTo = e => {
+    e.preventDefault();
+    const user = {
+      email: email,
+      password: password,
+    };
+    const loginUrl = "http://localhost:8100/register/login";
+    fetch(loginUrl, {
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(user),
+      method: "POST",
+    })
+      .then(res => {
+        if (res.ok) {
+          console.log("ok");
+        } else {
+          console.log(
+            "From server: " +
+              res.text().then(text => {
+                console.log(text);
+                alert(text);
+              })
+          );
+        }
+      })
+      .catch(err => {
+        console.log("There is something: " + err.message);
+      });
+    navigate("/");
+  };
 
   return (
     <div class="MainWindow">
@@ -67,4 +88,4 @@ function Login({onLogIn}) {
   );
 }
 
-export default Login
+export default Login;

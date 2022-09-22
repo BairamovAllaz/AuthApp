@@ -5,6 +5,7 @@ const bcrypt = require("bcrypt");
 const database = require("../SQL/mysqlconnector");
 const path = require("path");
 const e = require("express");
+const Auth = require("../middleware/auth");
 
 router.post("/register", async (req, res) => {
   try {
@@ -24,6 +25,8 @@ router.post("/register", async (req, res) => {
     const isUserExist = await checkIfUserExist(User.email);
     if (isUserExist) {
       return res.status(401).send("User already exist");
+    } else if (!validateEmail(User.email)) {
+      return res.status(401).send("Email syntax invalid try correct syntax");
     } else {
       const insertedId = await insertPersonToDatabase(
         User.firstName,
@@ -46,6 +49,12 @@ router.post("/register", async (req, res) => {
     console.log(err);
   }
 });
+
+const validateEmail = email => {
+  return email.match(
+    /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/
+  );
+};
 
 function checkIfUserExist(email) {
   return new Promise((resolve, reject) => {
@@ -100,6 +109,10 @@ router.post("/login", async (req, res) => {
             process.env.SECRET_KEY
           );
           res.cookie("token", token, { httpOnly: true }).send();
+        } else if (!validateEmail(req.body.email)) {
+          res
+            .status(404)
+            .send("invalid email syntax try to use correct syntax");
         } else {
           res.status(401).send("Password incorrect!");
         }
@@ -141,4 +154,13 @@ router.get("/isLoggedIn", (req, res) => {
     res.send(false);
   }
 });
+
+router.get("/user",Auth,(req,res) => { 
+  if(req.user !== undefined) { 
+      res.status(200).send("ok");
+  }else{
+    res.status(401).send(false);
+  }
+})
+
 module.exports = router;
