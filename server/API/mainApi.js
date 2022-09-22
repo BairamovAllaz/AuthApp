@@ -11,6 +11,16 @@ router.get("/getusers",async (req,res) => {
     }
 })
 
+router.delete("/delete", async (req, res) => {
+  try {
+    console.log(req.body.Id);
+    res.send(req.body);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
 function getsUsers() {
   return new Promise((resolve, reject) => {
     const sqlString =

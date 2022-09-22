@@ -1,6 +1,6 @@
 import React from "react";
 import { useTable, useRowSelect } from "react-table";
-function Table({ columns, data, onChangeSelection }) {
+function Table({ columns, data, onChangeSelection, setSelectedRows }) {
   const initiallySelectedRows = React.useMemo(() => new Set(["1"]), []);
   const table = useTable(
     {
@@ -26,17 +26,11 @@ function Table({ columns, data, onChangeSelection }) {
   } = table;
 
   React.useEffect(() => {
-    console.log("selectedFlatRows", selectedFlatRows.length);
-    onChangeSelection(selectedFlatRows.length);
+    setSelectedRows(selectedFlatRows);
   }, [selectedFlatRows, onChangeSelection]);
 
   return (
     <>
-      <button
-        onClick={() => toggleAllRowsSelected()} //trigger select all rows
-      >
-        Select All Rows
-      </button>
       <table {...getTableProps()}>
         <thead>
           {headerGroups.map(headerGroup => (
@@ -48,7 +42,7 @@ function Table({ columns, data, onChangeSelection }) {
           ))}
         </thead>
         <tbody {...getTableBodyProps()}>
-          {rows.slice(0, 10).map((row, i) => {
+          {rows.map((row, i) => {
             prepareRow(row);
             return (
               <tr {...row.getRowProps()}>
@@ -62,21 +56,6 @@ function Table({ columns, data, onChangeSelection }) {
           })}
         </tbody>
       </table>
-      <p>Selected Rows: {selectedRowPaths.size}</p>
-      <pre>
-        <code>
-          {JSON.stringify(
-            {
-              selectedRowPaths: [...selectedRowPaths.values()],
-              "selectedFlatRows[].original": selectedFlatRows.map(
-                d => d.original
-              ),
-            },
-            null,
-            2
-          )}
-        </code>
-      </pre>
     </>
   );
 }

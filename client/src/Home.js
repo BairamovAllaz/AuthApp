@@ -5,13 +5,14 @@ import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import styled from "styled-components";
-import Table from "./Components/Table"
+import Table from "./Components/Table";
 import "./Home.css";
 
 const Styles = styled.div`
   padding: 1rem;
 
   table {
+    width: 100%;
     border-spacing: 0;
     border: 1px solid black;
 
@@ -29,7 +30,6 @@ const Styles = styled.div`
       padding: 0.5rem;
       border-bottom: 1px solid black;
       border-right: 1px solid black;
-
       :last-child {
         border-right: 0;
       }
@@ -39,6 +39,7 @@ const Styles = styled.div`
 
 function Home() {
   const [users, setUsers] = useState([]);
+  const [selectedRows, setSelectedRows] = useState([]);
   useEffect(() => {
     fetch("http://localhost:8100/user/getusers")
       .then(data => data.json())
@@ -108,6 +109,31 @@ function Home() {
     [setSelectedRowCount]
   );
 
+  const handle = parametr => {
+    setSelectedRows(parametr);
+    selectedRows.map(e => { 
+      console.log(e);
+    })
+  };
+
+  const Delete = () => { 
+    selectedRows.map(e => { 
+       const loginUrl = "http://localhost:8100/user/delete";
+       fetch(loginUrl, {
+         body: e,
+         method: "DELETE",
+       })
+         .then(res => {
+           console.log(res);
+         })
+         .catch(err => {
+           console.log("There is something: " + err.message);
+         });
+    }) 
+  }
+
+  useEffect(() => {}, [selectedRows]);
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -122,7 +148,7 @@ function Home() {
             />{" "}
             <span>Admin Panel</span>
             <span className="SpanDiv">
-              <Button className="But" variant="danger">
+              <Button className="But" variant="danger" onClick={Delete}>
                 Delete
               </Button>
               <Button className="But" variant="secondary">
@@ -135,12 +161,12 @@ function Home() {
           </Navbar.Brand>
         </Container>
       </Navbar>
-
       <Styles>
         <Table
           columns={columns}
           data={users}
           onChangeSelection={handleChangeSelection}
+          setSelectedRows={handle}
         />
       </Styles>
     </>

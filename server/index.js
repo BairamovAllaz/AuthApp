@@ -11,13 +11,21 @@ app.use(express.json());
 app.use(express.urlencoded({ 
     extended : true
 }))
-app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
+app.use(cors({ credentials: true, origin: "*", optionSuccessStatus:200 }));
 
 app.use(
   express.urlencoded({
     extended: true,
   })
 );
+
+
+app.use(bodyParser());
+app.use(
+  bodyParser.urlencoded({
+    extended: true,
+  })
+); 
 app.use(coockieParser()); 
 
 app.use(function (req, res, next) {
