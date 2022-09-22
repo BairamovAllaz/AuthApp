@@ -13,7 +13,8 @@ router.get("/getusers",async (req,res) => {
 
 function getsUsers() {
   return new Promise((resolve, reject) => {
-    const sqlString = "SELECT * FROM user";
+    const sqlString =
+      "SELECT * FROM user INNER JOIN person ON user.person_id = person.Id";
     database.query(sqlString, (err, result, field) => {
       if (err) reject(err);
       resolve(result);

@@ -71,11 +71,11 @@ function Home() {
         columns: [
           {
             Header: "First Name",
-            accessor: "firstName",
+            accessor: "first_name",
           },
           {
             Header: "Last Name",
-            accessor: "lastName",
+            accessor: "last_name",
           },
         ],
       },
