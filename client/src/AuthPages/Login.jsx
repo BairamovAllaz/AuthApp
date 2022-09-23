@@ -3,13 +3,21 @@ import { Link, useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useState } from "react";
 import "./AuthStyle/Login.css";
+import { useAsyncDebounce } from "react-table";
 axios.defaults.withCredentials = true;
 function Login() {
   const navigate = useNavigate();
   const [email, setemail] = useState("");
   const [password, setpassword] = useState("");
+  const [error, setError] = useState("");
+
+  const storeUser = token => {
+    localStorage.setItem("token", JSON.stringify(token));
+  };
   const LoginTo = e => {
     e.preventDefault();
+    localStorage.clear();
+    setError("");
     const user = {
       email: email,
       password: password,
@@ -17,7 +25,7 @@ function Login() {
     const loginUrl = "http://localhost:8100/register/login";
     fetch(loginUrl, {
       credentials: "same-origin",
-      withCredentials:true,
+      withCredentials: true,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",
@@ -25,23 +33,31 @@ function Login() {
       body: JSON.stringify(user),
       method: "POST",
     })
-      .then(res => {
-        if (res.ok) {
-          console.log("ok");
-        } else {
-          console.log(
-            "From server: " +
-              res.text().then(text => {
-                console.log(text);
-                alert(text);
-              })
+      .then(d => {
+        if(!d.ok){
+        console.log(
+          "From server: " +
+          d.text().then(text => {
+            console.log(text);
+            alert(text);
+            setError(text);
+          })
           );
+        }
+          return d.text();
+      })
+      .then(res => {
+        if (error === "") {
+          storeUser(res);
+          console.log("ok");
+          navigate("/");
+        }else{ 
+          storeUser(null);
         }
       })
       .catch(err => {
-        console.log("There is something: " + err.message);
+        console.log(err);
       });
-    navigate("/");
   };
 
   return (

@@ -9,36 +9,13 @@ function PrivateRoute({ children }) {
   const navigate = useNavigate();
   //TODO FIX THIS 
   useEffect(() => {
-    const loginUrl = "http://localhost:8100/register/isLoggedIn";
-
-    fetch(loginUrl, {
-      credentials: "same-origin",
-      withCredntials: true,
-      crossDomain: true,
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      method: "GET",
-    })
-      .then(res => {
-        if (res.ok) {
+       if (JSON.parse(localStorage.getItem("token")) !== null) {
           setisAuth(true);
-          console.log("it is ok!!!!!");
-        } else {
-          setisAuth(false);
-          console.log(
-            "From server: " +
-              res.text().then(text => {
-                console.log(text);
-                alert(text);
-              })
-          );
-        }
-      })
-      .catch(err => {
-        console.log("There is something: " + err.message);
-      });
+          navigate("/")
+       }else { 
+        setisAuth(false);
+        navigate("/login");
+       }
   }, []);
 
   // useEffect(() => {

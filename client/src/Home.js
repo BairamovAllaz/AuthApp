@@ -149,6 +149,11 @@ function Home() {
     });
   };
 
+  const logOut = () => {
+    localStorage.clear();
+    window.location.reload(false)
+  };
+
   return (
     <>
       <Navbar bg="dark" variant="dark">
@@ -169,7 +174,7 @@ function Home() {
               <Button className="But" variant="secondary">
                 Block
               </Button>
-              <Button className="But" variant="success">
+              <Button className="But" variant="success" onClick={logOut}>
                 LogOut
               </Button>
             </span>

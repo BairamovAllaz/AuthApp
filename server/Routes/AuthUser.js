@@ -107,11 +107,7 @@ router.post("/login", async (req, res) => {
             process.env.SECRET_KEY
           );
           //res.cookie("token", token, { httpOnly: true }).send();
-          
-          res.cookie("cookieName", token, {
-             maxAge: 900000,
-             httpOnly: true,
-           }).send();
+          res.status(200).send(token);
         } else if (!validateEmail(req.body.email)) {
           res
             .status(404)
