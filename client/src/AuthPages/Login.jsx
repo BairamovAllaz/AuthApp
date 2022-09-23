@@ -17,6 +17,7 @@ function Login() {
     const loginUrl = "http://localhost:8100/register/login";
     fetch(loginUrl, {
       credentials: "same-origin",
+      withCredentials:true,
       headers: {
         Accept: "application/json",
         "Content-Type": "application/json",

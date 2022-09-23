@@ -89,8 +89,6 @@ function insertAccountToDatabase(personId, email, password) {
   });
 }
 router.post("/login", async (req, res) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Credentials", true);
   select(req.body.email)
     .then(async result => {
       if (result === undefined) {
@@ -108,7 +106,12 @@ router.post("/login", async (req, res) => {
             },
             process.env.SECRET_KEY
           );
-          res.cookie("token", token, { httpOnly: true }).send();
+          //res.cookie("token", token, { httpOnly: true }).send();
+          
+          res.cookie("cookieName", token, {
+             maxAge: 900000,
+             httpOnly: true,
+           }).send();
         } else if (!validateEmail(req.body.email)) {
           res
             .status(404)
@@ -147,11 +150,12 @@ router.get("/logout", (req, res) => {
 router.get("/isLoggedIn", (req, res) => {
   try {
     const token = req.cookies.token;
-    if (!token) return res.json(false);
+    console.log("token: " + token);
+    if (!token) return res.status(400).json(false);
     jwt.verify(token, process.env.SECRET_KEY);
-    res.send(true);
+    res.status(200).send(true);
   } catch (err) {
-    res.send(false);
+    res.status(400).send(false);
   }
 });
 

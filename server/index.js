@@ -3,6 +3,7 @@ const app = express();
 const coockieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
+const session = require("express-cookie")
 dotenv.config();
 
 app.use(express.json());
@@ -10,20 +11,34 @@ app.use(express.urlencoded({
     extended : false
 }))
 
-app.use(cors({ credentials: true, origin: "*", optionSuccessStatus:200 }));
-app.use(coockieParser()); 
-
-
-app.use(function (req, res, next) {
-  res.header("Content-Type", "application/json;charset=UTF-8");
-  res.header("Access-Control-Allow-Credentials", true);
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
+app.all("/*", function (req, res, next) {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header("Access-Control-Allow-Headers", "X-Requested-With");
   next();
 });
 
+app.set("trust proxy", 1); // trust first proxy
+app.use(
+  session({
+    secret: "836wer89r",
+    resave: false,
+    saveUninitialized: true,
+    cookie: {
+      secure: true,
+      sameSite: "none",
+    },
+  })
+);
+
+app.use(
+  cors({
+    credentials: true,
+    origin: ["http://localhost:3000/"],
+    optionSuccessStatus: 200,
+    exposedHeaders: ["Set-Cookie", "Date", "ETag"],
+  })
+);
+app.use(coockieParser()); 
 
 app.get('/',(req,res) => { 
     res.send("Hello world");
