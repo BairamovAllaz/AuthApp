@@ -6,6 +6,7 @@ import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
 import styled from "styled-components";
 import Table from "./Components/Table";
+import CircularJSON from "circular-json";
 import "./Home.css";
 
 const Styles = styled.div`
@@ -118,32 +119,34 @@ function Home() {
 
   const Delete = () => {
     const loginUrl = "http://localhost:8100/user/delete";
-    const json = { name: 1 };
-    fetch(loginUrl, {
-      credentials: "same-origin",
-      headers: {
-        Accept: "application/json",
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(json),
-      method: "DELETE",
-    })
-      .then(res => {
-        if (res.ok) {
-          console.log("ok");
-        } else {
-          console.log(
-            "From server: " +
-              res.text().then(text => {
-                console.log(text);
-                alert(text);
-              })
-          );
-        }
+
+    selectedRows.map(data => {
+      fetch(loginUrl, {
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data.original),
+        method: "DELETE",
       })
-      .catch(err => {
-        console.log("There is something: " + err.message);
-      });
+        .then(res => {
+          if (res.ok) {
+            console.log("ok");
+          } else {
+            console.log(
+              "From server: " +
+                res.text().then(text => {
+                  console.log(text);
+                  alert(text);
+                })
+            );
+          }
+        })
+        .catch(err => {
+          console.log("There is something: " + err.message);
+        });
+    });
   };
 
   return (

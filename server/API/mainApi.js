@@ -16,7 +16,8 @@ router.get("/getusers",async (req,res) => {
 
 router.delete("/delete", async (req, res) => {
   try {
-    console.log(req.body);
+    let myMap = new Map(Object.entries(req.body));
+    deleteUsers(myMap);
     res.send(req.body);
   } catch (err) {
     console.log(err);
@@ -34,4 +35,18 @@ function getsUsers() {
     });
   });
 }
+
+function deleteUsers(users) {
+  return new Promise((resolve, reject) => {
+    const sqlString = "UPDATE person SET is_delete=TRUE WHERE Id=?";
+    for (const [key, value] of users.entries()) {
+      database.query(sqlString, value, (err, result, field) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    }
+  });
+}
+
+
 module.exports = router;
