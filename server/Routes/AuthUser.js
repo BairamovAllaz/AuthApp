@@ -43,7 +43,7 @@ router.post("/register", async (req, res) => {
         },
         process.env.SECRET_KEY
       );
-      res.cookie("token", token, { httpOnly: true }).send();
+      res.status(200).send(token);
     }
   } catch (err) {
     console.log(err);
@@ -155,12 +155,12 @@ router.get("/isLoggedIn", (req, res) => {
   }
 });
 
-router.get("/user",Auth,(req,res) => { 
-  if(req.user !== undefined) { 
-      res.status(200).send("ok");
-  }else{
+router.get("/user", Auth, (req, res) => {
+  if (req.user !== undefined) {
+    res.status(200).send("ok");
+  } else {
     res.status(401).send(false);
   }
-})
+});
 
 module.exports = router;

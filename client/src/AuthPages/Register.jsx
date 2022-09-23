@@ -8,10 +8,13 @@ function Register() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [passwordVerify, setPasswordVerify] = useState("");
+  const [error, setError] = useState("");
 
   const navigate = useNavigate();
   const SubmitRegister = e => {
     e.preventDefault();
+    localStorage.clear();
+    setError("");
     const User = {
       firstName: FirstName,
       lastName: lastName,
@@ -29,23 +32,37 @@ function Register() {
       body: JSON.stringify(User),
       method: "POST",
     })
-      .then(res => {
-        if (res.ok) {
-          navigate("/");
-        } else {
+      .then(d => {
+        if (!d.ok) {
           console.log(
             "From server: " +
-              res.text().then(text => {
+              d.text().then(text => {
                 console.log(text);
                 alert(text);
+                setError(text);
               })
           );
+        }
+        return d.text();
+      })
+      .then(res => {
+        if (error === "") {
+          storeUser(res);
+          console.log("ok");
+          navigate("/");
+        } else {
+          storeUser(null);
         }
       })
       .catch(err => {
         console.log("There is something: " + err.message);
       });
   };
+
+  const storeUser = token => {
+    localStorage.setItem("token", JSON.stringify(token));
+  };
+
   return (
     <div className="mm">
       <div class="mainRegister">
