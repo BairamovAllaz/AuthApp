@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const database = require("../SQL/mysqlconnector");
+const bodyParser = require("body-parser");
+router.use(bodyParser.urlencoded({ extended: false }));
+router.use(bodyParser.json());
 
 router.get("/getusers",async (req,res) => { 
     try{ 
@@ -13,7 +16,7 @@ router.get("/getusers",async (req,res) => {
 
 router.delete("/delete", async (req, res) => {
   try {
-    console.log(req.body.Id);
+    console.log(req.body);
     res.send(req.body);
   } catch (err) {
     console.log(err);

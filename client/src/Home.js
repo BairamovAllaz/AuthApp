@@ -111,28 +111,40 @@ function Home() {
 
   const handle = parametr => {
     setSelectedRows(parametr);
-    selectedRows.map(e => { 
+    selectedRows.map(e => {
       console.log(e);
-    })
+    });
   };
 
-  const Delete = () => { 
-    selectedRows.map(e => { 
-       const loginUrl = "http://localhost:8100/user/delete";
-       fetch(loginUrl, {
-         body: e,
-         method: "DELETE",
-       })
-         .then(res => {
-           console.log(res);
-         })
-         .catch(err => {
-           console.log("There is something: " + err.message);
-         });
-    }) 
-  }
-
-  useEffect(() => {}, [selectedRows]);
+  const Delete = () => {
+    const loginUrl = "http://localhost:8100/user/delete";
+    const json = { name: 1 };
+    fetch(loginUrl, {
+      credentials: "same-origin",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(json),
+      method: "DELETE",
+    })
+      .then(res => {
+        if (res.ok) {
+          console.log("ok");
+        } else {
+          console.log(
+            "From server: " +
+              res.text().then(text => {
+                console.log(text);
+                alert(text);
+              })
+          );
+        }
+      })
+      .catch(err => {
+        console.log("There is something: " + err.message);
+      });
+  };
 
   return (
     <>
@@ -172,5 +184,4 @@ function Home() {
     </>
   );
 }
-
 export default Home;

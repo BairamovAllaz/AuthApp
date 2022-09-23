@@ -1,32 +1,18 @@
 const express = require("express");
 const app = express(); 
-const bodyParser = require("body-parser"); 
 const coockieParser = require("cookie-parser");
 const dotenv = require("dotenv");
 const cors = require("cors");
 dotenv.config();
 
 app.use(express.json());
-
 app.use(express.urlencoded({ 
-    extended : true
+    extended : false
 }))
+
 app.use(cors({ credentials: true, origin: "*", optionSuccessStatus:200 }));
-
-app.use(
-  express.urlencoded({
-    extended: true,
-  })
-);
-
-
-app.use(bodyParser());
-app.use(
-  bodyParser.urlencoded({
-    extended: true,
-  })
-); 
 app.use(coockieParser()); 
+
 
 app.use(function (req, res, next) {
   res.header("Content-Type", "application/json;charset=UTF-8");
