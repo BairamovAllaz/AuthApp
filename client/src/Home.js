@@ -112,9 +112,6 @@ function Home() {
 
   const handle = parametr => {
     setSelectedRows(parametr);
-    selectedRows.map(e => {
-      console.log(e);
-    });
   };
 
   const Delete = () => {
@@ -147,6 +144,10 @@ function Home() {
           console.log("There is something: " + err.message);
         });
     });
+    selectedRows.map(e => { 
+      console.log(e.original.Id);
+      setUsers(users.filter(k => k.Id !== e.original.Id));
+    })
   };
 
   const logOut = () => {

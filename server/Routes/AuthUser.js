@@ -58,7 +58,7 @@ const validateEmail = email => {
 
 function checkIfUserExist(email) {
   return new Promise((resolve, reject) => {
-    const sqlString = "SELECT * FROM user WHERE email=?";
+    const sqlString = "SELECT * FROM user WHERE email=? AND is_delete=0";
     database.query(sqlString, email, (err, result, field) => {
       if (err) reject(err);
       resolve(result.length > 0 ? true : false);
@@ -124,7 +124,7 @@ router.post("/login", async (req, res) => {
 
 function select(attribute) {
   return new Promise((resolve, reject) => {
-    const Sqlstring = `SELECT * FROM user WHERE email=?`;
+    const Sqlstring = `SELECT * FROM user WHERE email=? AND is_delete=0`;
     database.query(Sqlstring, attribute, (err, result, field) => {
       if (err) reject(err);
       resolve(result[0]);

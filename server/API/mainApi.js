@@ -17,7 +17,8 @@ router.get("/getusers",async (req,res) => {
 router.delete("/delete", async (req, res) => {
   try {
     let myMap = new Map(Object.entries(req.body));
-    deleteUsers(myMap);
+    deletePerson(myMap);
+    deleteUser(myMap);
     res.send(req.body);
   } catch (err) {
     console.log(err);
@@ -28,7 +29,7 @@ router.delete("/delete", async (req, res) => {
 function getsUsers() {
   return new Promise((resolve, reject) => {
     const sqlString =
-      "SELECT * FROM user INNER JOIN person ON user.person_id = person.Id";
+      "SELECT * FROM user INNER JOIN person ON user.person_id = person.Id AND user.is_delete=0 AND person.is_delete=0";
     database.query(sqlString, (err, result, field) => {
       if (err) reject(err);
       resolve(result);
@@ -36,7 +37,7 @@ function getsUsers() {
   });
 }
 
-function deleteUsers(users) {
+function deletePerson(users) {
   return new Promise((resolve, reject) => {
     const sqlString = "UPDATE person SET is_delete=TRUE WHERE Id=?";
     for (const [key, value] of users.entries()) {
@@ -48,5 +49,16 @@ function deleteUsers(users) {
   });
 }
 
+function deleteUser(users) {
+  return new Promise((resolve, reject) => {
+    const sqlString = "UPDATE user SET is_delete=TRUE WHERE Id=?";
+    for (const [key, value] of users.entries()) {
+      database.query(sqlString, value, (err, result, field) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    }
+  });
+}
 
 module.exports = router;
