@@ -25,6 +25,28 @@ router.delete("/delete", async (req, res) => {
   }
 });
 
+router.put("/Block", async (req, res) => {
+  try {
+    let myMap = new Map(Object.entries(req.body));
+    updateUser(myMap);
+    res.send(req.body);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
+router.put("/UnBlock", async (req, res) => {
+  try {
+    let myMap = new Map(Object.entries(req.body));
+    UnBlock(myMap);
+    res.send(req.body);
+  } catch (err) {
+    console.log(err);
+  }
+});
+
+
 
 function getsUsers() {
   return new Promise((resolve, reject) => {
@@ -52,6 +74,30 @@ function deletePerson(users) {
 function deleteUser(users) {
   return new Promise((resolve, reject) => {
     const sqlString = "UPDATE user SET is_delete=TRUE WHERE Id=?";
+    for (const [key, value] of users.entries()) {
+      database.query(sqlString, value, (err, result, field) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    }
+  });
+}
+
+function updateUser(users) {
+  return new Promise((resolve, reject) => {
+    const sqlString = "UPDATE user SET status='Blocked' WHERE Id=?";
+    for (const [key, value] of users.entries()) {
+      database.query(sqlString, value, (err, result, field) => {
+        if (err) reject(err);
+        resolve(result);
+      });
+    }
+  });
+}
+
+function UnBlock(users) {
+  return new Promise((resolve, reject) => {
+    const sqlString = "UPDATE user SET status='Active' WHERE Id=?";
     for (const [key, value] of users.entries()) {
       database.query(sqlString, value, (err, result, field) => {
         if (err) reject(err);

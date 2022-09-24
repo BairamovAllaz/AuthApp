@@ -1,9 +1,14 @@
 import React, { useEffect, useState } from "react";
 import Container from "react-bootstrap/Container";
+import { Link, useNavigate } from "react-router-dom";
 import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
+import {AiOutlineDelete} from 'react-icons/ai'
+import {TbLock} from 'react-icons/tb'
+import {TbLockOpen} from 'react-icons/tb'
+import {AiOutlineLogout} from 'react-icons/ai'
 import styled from "styled-components";
 import Table from "./Components/Table";
 import CircularJSON from "circular-json";
@@ -39,6 +44,7 @@ const Styles = styled.div`
 `;
 
 function Home() {
+    const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   useEffect(() => {
@@ -144,15 +150,44 @@ function Home() {
           console.log("There is something: " + err.message);
         });
     });
-    selectedRows.map(e => { 
-      console.log(e.original.Id);
-      setUsers(users.filter(k => k.Id !== e.original.Id));
-    })
+    window.location.reload(0);
   };
 
   const logOut = () => {
     localStorage.clear();
-    window.location.reload(false)
+    window.location.reload(false);
+  };
+
+  const Update = typeu => {
+    const loginUrl = `http://localhost:8100/user/${typeu}`;
+    selectedRows.map(data => {
+      fetch(loginUrl, {
+        credentials: "same-origin",
+        headers: {
+          Accept: "application/json",
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(data.original),
+        method: "PUT",
+      })
+        .then(res => {
+          if (res.ok) {
+            console.log("ok");
+          } else {
+            console.log(
+              "From server: " +
+                res.text().then(text => {
+                  console.log(text);
+                  alert(text);
+                })
+            );
+          }
+        })
+        .catch(err => {
+          console.log("There is something: " + err.message);
+        });
+      window.location.reload(0);
+    });
   };
 
   return (
@@ -170,13 +205,24 @@ function Home() {
             <span>Admin Panel</span>
             <span className="SpanDiv">
               <Button className="But" variant="danger" onClick={Delete}>
-                Delete
+                <AiOutlineDelete/>
               </Button>
-              <Button className="But" variant="secondary">
-                Block
+              <Button
+                className="But"
+                variant="secondary"
+                onClick={() => Update("Block")}
+              >
+                <TbLock/>
+              </Button>
+              <Button
+                className="But"
+                variant="secondary"
+                onClick={() => Update("UnBlock")}
+              >
+                <TbLockOpen/>
               </Button>
               <Button className="But" variant="success" onClick={logOut}>
-                LogOut
+                <AiOutlineLogout/>
               </Button>
             </span>
           </Navbar.Brand>

@@ -48,6 +48,7 @@ function Login() {
       })
       .then(res => {
         if (error === "") {
+          console.log(res);
           storeUser(res);
           console.log("ok");
           navigate("/");

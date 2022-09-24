@@ -92,7 +92,7 @@ router.post("/login", async (req, res) => {
   select(req.body.email)
     .then(async result => {
       if (result === undefined) {
-        res.status(404).send("user email not founded");
+        res.status(404).send("user email not founded OR Blocked");
       } else {
         const passwordFromRequest = req.body.password;
         const isPasswordCorrect = await checkPassword(
@@ -106,7 +106,6 @@ router.post("/login", async (req, res) => {
             },
             process.env.SECRET_KEY
           );
-          //res.cookie("token", token, { httpOnly: true }).send();
           res.status(200).send(token);
         } else if (!validateEmail(req.body.email)) {
           res
@@ -122,10 +121,20 @@ router.post("/login", async (req, res) => {
     });
 });
 
+function checkIfUserBlocked(email) {
+  return new Promise((resolve, reject) => {
+    const sqlString = "SELECT * FROM user WHERE email=? AND status=?";
+    database.query(sqlString, email,'Blocked', (err, result, field) => {
+      if (err) reject(err);
+      resolve(result.length > 0 ? true : false);
+    });
+  });
+}
+
 function select(attribute) {
   return new Promise((resolve, reject) => {
-    const Sqlstring = `SELECT * FROM user WHERE email=? AND is_delete=0`;
-    database.query(Sqlstring, attribute, (err, result, field) => {
+    const Sqlstring = `SELECT * FROM user WHERE email=? AND is_delete=0 AND status=?`;
+    database.query(Sqlstring, [attribute,"Active"], (err, result, field) => {
       if (err) reject(err);
       resolve(result[0]);
     });
@@ -139,28 +148,4 @@ function checkPassword(password, hashPassword) {
     });
   });
 }
-router.get("/logout", (req, res) => {
-  res.cookie("token", "", { httpOnly: true }).send();
-});
-
-router.get("/isLoggedIn", (req, res) => {
-  try {
-    const token = req.cookies.token;
-    console.log("token: " + token);
-    if (!token) return res.status(400).json(false);
-    jwt.verify(token, process.env.SECRET_KEY);
-    res.status(200).send(true);
-  } catch (err) {
-    res.status(400).send(false);
-  }
-});
-
-router.get("/user", Auth, (req, res) => {
-  if (req.user !== undefined) {
-    res.status(200).send("ok");
-  } else {
-    res.status(401).send(false);
-  }
-});
-
 module.exports = router;
