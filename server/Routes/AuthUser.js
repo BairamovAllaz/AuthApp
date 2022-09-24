@@ -43,7 +43,11 @@ router.post("/register", async (req, res) => {
         },
         process.env.SECRET_KEY
       );
-      res.status(200).send(token);
+      const account = {
+         Id: accountId,
+         token : token
+      }
+      res.status(200).send(account);
     }
   } catch (err) {
     console.log(err);
@@ -106,7 +110,11 @@ router.post("/login", async (req, res) => {
             },
             process.env.SECRET_KEY
           );
-          res.status(200).send(token);
+          const account = { 
+            Id : result.Id, 
+            token : token
+          }
+          res.status(200).send(account);
         } else if (!validateEmail(req.body.email)) {
           res
             .status(404)

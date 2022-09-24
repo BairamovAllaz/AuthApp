@@ -12,7 +12,8 @@ function Login() {
   const [error, setError] = useState("");
 
   const storeUser = token => {
-    localStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem("Id", JSON.stringify(token.Id));
+    localStorage.setItem("token", JSON.stringify(token.token));
   };
   const LoginTo = e => {
     e.preventDefault();
@@ -44,7 +45,7 @@ function Login() {
           })
           );
         }
-          return d.text();
+          return d.json();
       })
       .then(res => {
         if (error === "") {

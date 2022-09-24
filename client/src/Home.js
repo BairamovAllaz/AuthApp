@@ -5,10 +5,10 @@ import Nav from "react-bootstrap/Nav";
 import Navbar from "react-bootstrap/Navbar";
 import Button from "react-bootstrap/Button";
 import NavDropdown from "react-bootstrap/NavDropdown";
-import {AiOutlineDelete} from 'react-icons/ai'
-import {TbLock} from 'react-icons/tb'
-import {TbLockOpen} from 'react-icons/tb'
-import {AiOutlineLogout} from 'react-icons/ai'
+import { AiOutlineDelete } from "react-icons/ai";
+import { TbLock } from "react-icons/tb";
+import { TbLockOpen } from "react-icons/tb";
+import { AiOutlineLogout } from "react-icons/ai";
 import styled from "styled-components";
 import Table from "./Components/Table";
 import CircularJSON from "circular-json";
@@ -44,7 +44,7 @@ const Styles = styled.div`
 `;
 
 function Home() {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const [users, setUsers] = useState([]);
   const [selectedRows, setSelectedRows] = useState([]);
   useEffect(() => {
@@ -52,7 +52,11 @@ function Home() {
       .then(data => data.json())
       .then(js => {
         setUsers(js);
-        console.log(js);
+        let isExist = js.some(a => localStorage.getItem("Id") == a.Id);
+        console.log(isExist);
+        if (isExist === false) {
+          navigate("/Login");
+        }
       })
       .catch(err => {
         console.log(err);
@@ -204,26 +208,28 @@ function Home() {
             />{" "}
             <span>Admin Panel</span>
             <span className="SpanDiv">
-              <Button className="But" variant="danger" onClick={Delete}>
-                <AiOutlineDelete/>
-              </Button>
-              <Button
-                className="But"
-                variant="secondary"
-                onClick={() => Update("Block")}
-              >
-                <TbLock/>
-              </Button>
-              <Button
-                className="But"
-                variant="secondary"
-                onClick={() => Update("UnBlock")}
-              >
-                <TbLockOpen/>
-              </Button>
-              <Button className="But" variant="success" onClick={logOut}>
-                <AiOutlineLogout/>
-              </Button>
+              <div className="inner">
+                <Button className="But" variant="danger" onClick={Delete}>
+                  <AiOutlineDelete />
+                </Button>
+                <Button
+                  className="But"
+                  variant="secondary"
+                  onClick={() => Update("Block")}
+                >
+                  <TbLock />
+                </Button>
+                <Button
+                  className="But"
+                  variant="secondary"
+                  onClick={() => Update("UnBlock")}
+                >
+                  <TbLockOpen />
+                </Button>
+                <Button className="But" variant="success" onClick={logOut}>
+                  <AiOutlineLogout />
+                </Button>
+              </div>
             </span>
           </Navbar.Brand>
         </Container>

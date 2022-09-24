@@ -43,7 +43,7 @@ function Register() {
               })
           );
         }
-        return d.text();
+        return d.json();
       })
       .then(res => {
         if (error === "") {
@@ -60,7 +60,8 @@ function Register() {
   };
 
   const storeUser = token => {
-    localStorage.setItem("token", JSON.stringify(token));
+    localStorage.setItem("token", JSON.stringify(token.token));
+    localStorage.setItem("Id", JSON.stringify(token.Id));
   };
 
   return (
