@@ -53,8 +53,11 @@ function Home() {
       .then(js => {
         setUsers(js);
         let isExist = js.some(a => localStorage.getItem("Id") == a.Id);
-        console.log(isExist);
         if (isExist === false) {
+          navigate("/Login");
+        }
+        let obj = js.find(o => o.Id == localStorage.getItem("Id"));
+        if(obj.status == "Blocked") { 
           navigate("/Login");
         }
       })
